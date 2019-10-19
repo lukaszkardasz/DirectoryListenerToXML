@@ -21,6 +21,10 @@ public class DirectoryListener {
 
         //check if directory even exist
         File dir = new File(directoryLocation);
+        checkDirectoryExistence(directoryLocation, dir);
+    }
+
+    private void checkDirectoryExistence(String directoryLocation, File dir) {
         if (dir.exists()) {
             processDirectory();
         } else throw new DirectoryDoesntExistException(directoryLocation);
