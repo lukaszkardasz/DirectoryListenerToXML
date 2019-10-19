@@ -21,12 +21,12 @@ public class DirectoryListener {
 
         //check if directory even exist
         File dir = new File(directoryLocation);
-        if(dir.exists()){
+        if (dir.exists()) {
             processDirectory();
         } else throw new DirectoryDoesntExistException(directoryLocation);
     }
 
     private void processDirectory() {
-
+        //TODO - zrobić dodatkowe sprawdzanie czy katalog do umieszczenia XMLa istnieje
     }
 }
