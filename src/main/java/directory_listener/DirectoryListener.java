@@ -1,36 +1,75 @@
 package directory_listener;
 
 import directory_listener.exceptions.DirectoryDoesntExistException;
+import org.jdom2.Document;
+import org.jdom2.Element;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Scanner;
 
 public class DirectoryListener {
 
     public static void main(String[] args) {
+
         new DirectoryListener().run();
     }
+
 
     private void run() {
         Scanner sc = new Scanner(System.in);
         System.out.print("Podaj ścieżkę folderu, który ma zostać zeskanowany: ");
         String directoryLocation = sc.nextLine();
 
-        System.out.print("\nGdzie umieścić plik XML z wynikami: ");
+        System.out.print("Gdzie umieścić plik XML z wynikami: ");
         String xmlFileLocation = sc.nextLine();
 
-        //check if directory even exist
+        //JDOM element
+        Element fileCounter = new Element("file counter");
+        Document doc = new Document(fileCounter);
+        doc.setRootElement(fileCounter);
+
+        checkDirectoryExistence(directoryLocation, xmlFileLocation);
+    }
+
+    private void checkDirectoryExistence(String directoryLocation, String xmlFileLocation) {
         File dir = new File(directoryLocation);
-        checkDirectoryExistence(directoryLocation, dir);
-    }
-
-    private void checkDirectoryExistence(String directoryLocation, File dir) {
         if (dir.exists()) {
-            processDirectory();
+            processDirectory(dir);
         } else throw new DirectoryDoesntExistException(directoryLocation);
+
+        File outputDir = new File(xmlFileLocation);
+        if (outputDir.exists()){
+            createOutputFile(xmlFileLocation);
+        } else throw new DirectoryDoesntExistException(xmlFileLocation);
     }
 
-    private void processDirectory() {
-        //TODO - zrobić dodatkowe sprawdzanie czy katalog do umieszczenia XMLa istnieje
+    private void createOutputFile(String xmlFileLocation) {
+        String pathWithFilename = xmlFileLocation.concat(File.separator).concat("output.xml");
+        File outputFile = new File(pathWithFilename);
+        outputFile.getParentFile().mkdirs();
+        try {
+            outputFile.createNewFile();
+
+            //utwórz plik
+
+            System.out.println("Plik utworzony pomyślnie!");
+        } catch (IOException e) {
+            System.err.println("File already exists: " + e.getMessage());
+        }
+    }
+
+
+    private void processDirectory(File dir) {
+        for(File file : dir.listFiles()){
+            if (file.isDirectory()){
+                processDirectory(file);
+                String directoryName = file.getName(); //add to xml
+            } else {
+                String fileName = file.getName(); //add to xml
+                int numberOfFilesInDirectory = new File(file.getParent()).listFiles().length; //add to xml
+            }
+        }
+
     }
 }
