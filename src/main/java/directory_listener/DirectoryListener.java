@@ -25,9 +25,9 @@ public class DirectoryListener {
         String xmlFileLocation = sc.nextLine();
 
         //JDOM element
-        Element fileCounter = new Element("file counter");
+/*        Element fileCounter = new Element("file_counter");
         Document doc = new Document(fileCounter);
-        doc.setRootElement(fileCounter);
+        doc.setRootElement(fileCounter);*/
 
         checkDirectoryExistence(directoryLocation, xmlFileLocation);
     }
@@ -39,7 +39,7 @@ public class DirectoryListener {
         } else throw new DirectoryDoesntExistException(directoryLocation);
 
         File outputDir = new File(xmlFileLocation);
-        if (outputDir.exists()){
+        if (outputDir.exists()) {
             createOutputFile(xmlFileLocation);
         } else throw new DirectoryDoesntExistException(xmlFileLocation);
     }
@@ -61,13 +61,19 @@ public class DirectoryListener {
 
 
     private void processDirectory(File dir) {
-        for(File file : dir.listFiles()){
-            if (file.isDirectory()){
+        for (File file : dir.listFiles()) {
+            if (file.isDirectory()) {
                 processDirectory(file);
                 String directoryName = file.getName(); //add to xml
+                //print directory name
+                System.out.println("\t" + directoryName);
+
             } else {
                 String fileName = file.getName(); //add to xml
+                //print files
+                System.out.println(fileName);
                 int numberOfFilesInDirectory = new File(file.getParent()).listFiles().length; //add to xml
+                System.out.println("Number of files in dir: " + numberOfFilesInDirectory);
             }
         }
 
